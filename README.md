@@ -48,3 +48,12 @@ Cmdline (dari SODP 5.4 `PlatformConfig.mk`):
 Vendor Lineage 23.2 (aoitsme) dibuat untuk **4.9**. Kernel 5.4 butuh blobs odm
 yang serasi (SODP A16 / 5.4 Tama dari opendevices.sony.net). Ini titik paling
 rawan mismatch (display/camera/audio).
+
+
+## Binaries (v3) — PENTING untuk 5.4
+Tama **tidak punya** software binaries 5.4. Build 5.4 memakai **binaries 4.19 v3**
+(odm), diambil dari repo SODP `vendor-sony-tama` (sudah ke-fork di org kita):
+`vendor/sony/tama` <- `Tama-5-4-lineage/vendor-sony-tama` (master).
+Repo itu berisi `bin/ etc/ firmware/ lib/ lib64/ system_ext/` dan `Android.mk`
+yang menyalin ke `TARGET_OUT_ODM` (butuh `PRODUCT_PLATFORM=tama` — sudah diset di
+`device/sony/tama-common/common.mk`).
