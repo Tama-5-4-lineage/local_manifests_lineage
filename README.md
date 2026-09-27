@@ -1,14 +1,22 @@
 # local_manifests_lineage — Lineage 23.2 + kernel 5.4 (akari/tama)
 
 Manifest **terpisah** dari `local_manifests` (yang berbasis Sony-SDM845-5-4/AOSP).
-Yang ini: **device tree + vendor Lineage 23.2** (aoi-itsme / romiyusnandar / aoitsme)
-+ **kernel 5.4** (cubbins) — untuk build **LineageOS 23.2 (Android 16)**.
+Yang ini: **device tree + vendor Lineage 23.2** + **kernel 5.4** (cubbins) +
+**binaries SODP Tama v3 (odm)**.
 
-## Konten
-- `lineage-akari-5.4.xml` — local manifest:
-  - `device/sony/akari`, `device/sony/tama-common` (Lineage 23.2)
-  - `vendor/sony/akari`, `vendor/sony/tama-common` (Lineage 23.2)
-  - `kernel/sony/sdm845` ← `kernel_sony_sdm845-5.4` (cubbins) + techpack + wlan
+## Konten (`lineage-akari-5.4.xml`)
+- `device/sony/akari`, `device/sony/tama-common` — Lineage 23.2 (dipatch ke 5.4)
+- `vendor/sony/akari`, `vendor/sony/tama-common` — vendor Lineage 23.2
+- `vendor/sony/tama` — **binaries SODP Tama v3** (`vendor-sony-tama`, odm)
+- `kernel/sony/sdm845` — kernel 5.4 (cubbins) + techpack + wlan
+
+## Binaries v3 (odm)
+- Tama tidak ada binaries 5.4. Build 5.4 pakai binaries **4.19 v3 (odm)** dari repo
+  SODP `vendor-sony-tama` (sudah ke-fork di org kita).
+- Repo itu punya `Android.mk` yang menyalin `bin/ etc/ firmware/ lib/ lib64/ system_ext/`
+  ke `$(TARGET_OUT_ODM)` — build Android memindai semua `Android.mk`, jadi odm v3
+  otomatis terpasang (tidak perlu regenerate vendor Lineage).
+- Syarat: `PRODUCT_PLATFORM=tama` (sudah diset di `device/sony/tama-common/common.mk`).
 
 ## Build
 ```sh
@@ -18,42 +26,14 @@ curl -o .repo/local_manifests/lineage-akari-5.4.xml \
   https://raw.githubusercontent.com/Tama-5-4-lineage/local_manifests_lineage/main/lineage-akari-5.4.xml
 repo sync -c --force-sync -j$(nproc)
 source build/envsetup.sh
-lunch lineage_akari-userdebug      # atau aosp_... sesuai device tree
+lunch lineage_akari-userdebug     # atau aosp_... sesuai device tree
 mka bacon
 ```
 
-## Perubahan device tree yang WAJIB (swap 4.9 → 5.4)
-Di `device/sony/tama-common/BoardConfigCommon.mk`:
-```make
-TARGET_KERNEL_VERSION := 5.4
-TARGET_KERNEL_SOURCE  := kernel/sony/sdm845
-BOARD_KERNEL_TAGS_OFFSET := 0x01E00000
-BOARD_RAMDISK_OFFSET     := 0x02000000
-```
-Di `device/sony/akari/BoardConfig.mk`: `TARGET_KERNEL_CONFIG := <defconfig 5.4>`.
-
-Cmdline (dari SODP 5.4 `PlatformConfig.mk`):
-`androidboot.bootdevice=1d84000.ufshc`, `service_locator.enable=1`,
-`coherent_pool=8M`, `msm_drm.dsi_display0=somc,default_cmd_panel:config0`.
-
-## ⚠️ Masalah integrasi build kernel
-- Kernel 5.4 (cubbins) memakai **AOSP `build.config`** (GKI-style), **bukan
-  `AndroidKernel.mk`** yang dipakai device tree Lineage.
-- Solusi: (a) build kernel terpisah via `common-kernel/build-kernels-clang.sh`
-  lalu pakai sebagai prebuilt (`TARGET_PREBUILT_KERNEL` + `TARGET_PREBUILT_DTB`),
-  atau (b) tambahkan dukungan build 5.4 ke mekanisme device tree.
-- Referensi config 5.4: `Tama-5-4-lineage/device-sony-{tama,akari,common}` (branch `b-mr1`).
-
-## Vendor / blobs
-Vendor Lineage 23.2 (aoitsme) dibuat untuk **4.9**. Kernel 5.4 butuh blobs odm
-yang serasi (SODP A16 / 5.4 Tama dari opendevices.sony.net). Ini titik paling
-rawan mismatch (display/camera/audio).
-
-
-## Binaries (v3) — PENTING untuk 5.4
-Tama **tidak punya** software binaries 5.4. Build 5.4 memakai **binaries 4.19 v3**
-(odm), diambil dari repo SODP `vendor-sony-tama` (sudah ke-fork di org kita):
-`vendor/sony/tama` <- `Tama-5-4-lineage/vendor-sony-tama` (master).
-Repo itu berisi `bin/ etc/ firmware/ lib/ lib64/ system_ext/` dan `Android.mk`
-yang menyalin ke `TARGET_OUT_ODM` (butuh `PRODUCT_PLATFORM=tama` — sudah diset di
-`device/sony/tama-common/common.mk`).
+## Catatan
+- Kernel 5.4 sudah dipatch untuk **retrofit dynamic** (initramfs skip + force_normal_boot
+  + DT fstab vendor) + `AndroidKernel.mk` + fs-verity.
+- **Potensi duplikat odm**: vendor Lineage punya `proprietary/odm/lib{,64}/hw/audio.primary.sdm845.so`;
+  v3 punya HAL lain (gralloc/sensors/vulkan/bt/keymaster). Overlap minimal — kalau muncul
+  error duplikat, hapus entri odm yang bentrok dari vendor Lineage.
+- Build from source kernel 5.4 itu eksperimental; ekspektasikan bug (display/camera/audio).
