@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <!-- Device tree + vendor Lineage 23.2 (akari) -->
+  <remote name="t54"  fetch="https://github.com/Tama-5-4-lineage" />
+  <remote name="sony" fetch="https://github.com/sonyxperiadev" />
+
+  <project path="device/sony/akari"        name="android_device_sony_akari"             remote="t54" revision="lineage-23.2" />
+  <project path="device/sony/tama-common"  name="device_sony_tama-common"               remote="t54" revision="lineage-23.2" />
+  <project path="vendor/sony/akari"        name="proprietary_vendor_sony_akari"         remote="t54" revision="lineage-23.2" />
+  <project path="vendor/sony/tama-common"  name="proprietary_vendor_sony_tama-common"   remote="t54" revision="lineage-23.2" />
+
+  <!-- Kernel 5.4 (cubbins) + techpack + wlan, di path yang diharapkan device tree -->
+  <project path="kernel/sony/sdm845" name="kernel_sony_sdm845-5.4" remote="t54" revision="LA.UM.9.16.r1-18200-MANNAR.QSSI15.0" />
+
+  <project path="kernel/sony/sdm845/techpack/audio"         name="kernel_sony_sdm845-5.4_techpack_audio"        remote="t54" revision="LA.UM.9.16.r1-18200-MANNAR.QSSI15.0" />
+  <project path="kernel/sony/sdm845/techpack/camera"        name="kernel_sony_sdm845-5.4_techpack_camera"       remote="t54" revision="LA.UM.9.1.1.c25-01100-RENNELL.QSSI12c33.0" />
+  <project path="kernel/sony/sdm845/techpack/display"       name="kernel_sony_sdm845-5.4_techpack_display"      remote="t54" revision="LA.UM.9.16.r1-18200-MANNAR.QSSI15.0" />
+  <project path="kernel/sony/sdm845/techpack/dataipa"       name="kernel_sony_sdm845-5.4_techpack_dataipa"      remote="t54" revision="LA.UM.9.16.r1-18200-MANNAR.QSSI15.0" />
+  <project path="kernel/sony/sdm845/techpack/datarmnet"     name="kernel_sony_sdm845-5.4_techpack_datarmnet"    remote="t54" revision="LA.UM.9.16.r1-18200-MANNAR.QSSI15.0" />
+  <project path="kernel/sony/sdm845/techpack/datarmnet-ext" name="kernel_sony_sdm845-5.4_techpack_datarmnet-ext" remote="t54" revision="LA.UM.9.16.r1-18200-MANNAR.QSSI15.0" />
+
+  <project path="kernel/sony/sdm845/drivers/staging/wlan-qc/fw-api"            name="kernel_sony_sdm845-5.4_wlan_fw-api"            remote="t54" revision="LA.UM.9.16.r1-18200-MANNAR.QSSI15.0" />
+  <project path="kernel/sony/sdm845/drivers/staging/wlan-qc/qca-wifi-host-cmn" name="kernel_sony_sdm845-5.4_wlan_qca-wifi-host-cmn" remote="t54" revision="LA.UM.9.16.r1-18200-MANNAR.QSSI15.0" />
+  <project path="kernel/sony/sdm845/drivers/staging/wlan-qc/qcacld-3.0"        name="kernel_sony_sdm845-5.4_wlan_qcacld-3.0"        remote="t54" revision="LA.UM.9.16.r1-18200-MANNAR.QSSI15.0" />
+</manifest>
