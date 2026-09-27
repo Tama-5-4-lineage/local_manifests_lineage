@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <manifest>
-  <!-- Device tree + vendor Lineage 23.2 (akari) -->
+  <!-- Device tree + vendor Lineage 23.2 (format Lineage) -->
   <remote name="t54"  fetch="https://github.com/Tama-5-4-lineage" />
   <remote name="sony" fetch="https://github.com/sonyxperiadev" />
 
@@ -8,6 +8,9 @@
   <project path="device/sony/tama-common"  name="device_sony_tama-common"               remote="t54" revision="lineage-23.2" />
   <project path="vendor/sony/akari"        name="proprietary_vendor_sony_akari"         remote="t54" revision="lineage-23.2" />
   <project path="vendor/sony/tama-common"  name="proprietary_vendor_sony_tama-common"   remote="t54" revision="lineage-23.2" />
+
+  <!-- SODP Tama binaries v3 (odm) - dari repo SODP 5.4 (fork kita) -->
+  <project path="vendor/sony/tama" name="vendor-sony-tama" remote="t54" revision="master" />
 
   <!-- Kernel 5.4 (cubbins) + techpack + wlan, di path yang diharapkan device tree -->
   <project path="kernel/sony/sdm845" name="kernel_sony_sdm845-5.4" remote="t54" revision="LA.UM.9.16.r1-18200-MANNAR.QSSI15.0" />
